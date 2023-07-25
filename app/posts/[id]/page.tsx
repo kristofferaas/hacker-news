@@ -1,29 +1,45 @@
+import { Points } from "@/components/hacker-news/points";
 import { getItem } from "@/lib/api";
+import { formatDistance } from "date-fns";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default async function Post({ params }: { params: { id: string } }) {
   const item = await getItem(params.id);
 
   const url = item.url ? new URL(item.url) : null;
+  const time = formatDistance(new Date(item.time * 1000), new Date(), {
+    addSuffix: true,
+  });
 
   return (
     <main className="container max-w-5xl my-4">
-      <h1 className="text-lg font-bold my-2">
-        {item.title}{" "}
-        {url && (
-          <span className="font-normal text-muted-foreground text-sm">
-            ({url.hostname})
-          </span>
-        )}
-      </h1>
-      <p className="text-muted-foreground text-sm">
-        by <span>{item.by}</span> - <span>{item.score}</span> points
-      </p>
-      <p className="mt-4">Comments ({item.descendants})</p>
-      <ol>
-        {item.kids?.map((id) => (
-          <Comment key={id} id={id} />
-        ))}
-      </ol>
+      <div className="flex space-x-4">
+        <Points id={item.id} />
+        <div className="flex flex-col">
+          <h2 className="text-lg font-bold">
+            {item.title}{" "}
+            {url && (
+              <span className="font-normal text-muted-foreground text-sm">
+                ({url.hostname})
+              </span>
+            )}
+          </h2>
+          <p className="text-muted-foreground text-sm">
+            by <span>{item.by}</span> - <span>{time}</span>
+          </p>
+        </div>
+      </div>
+      <ErrorBoundary fallback={<p>Something went wrong</p>}>
+        <Suspense fallback={<p>Loading...</p>}>
+          <p className="mt-4">Comments ({item.descendants})</p>
+          <ol>
+            {item.kids?.map((id) => (
+              <Comment key={id} id={id} />
+            ))}
+          </ol>
+        </Suspense>
+      </ErrorBoundary>
     </main>
   );
 }
