@@ -110,7 +110,7 @@ export const searchByDate = async (params: SearchQueryParams) => {
 const hitsSchema = z.object({
   created_at: z.string(),
   title: z.string(),
-  url: z.string().url(),
+  url: z.string().url().nullable(),
   author: z.string(),
   points: z.number(),
   story_text: z.string().nullable(),
@@ -135,7 +135,7 @@ const hitsSchema = z.object({
       value: z.string(),
       matchLevel: z.enum(["none", "partial", "full"]),
       matchedWords: z.array(z.string()),
-    }),
+    }).optional(),
     author: z.object({
       value: z.string(),
       matchLevel: z.enum(["none", "partial", "full"]),
@@ -168,7 +168,7 @@ const searchResultSchema = z.object({
     fetch: z
       .object({
         query: z.number().optional(),
-        scanning: z.number(),
+        scanning: z.number().optional(),
         total: z.number(),
       })
       .optional(),
