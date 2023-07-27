@@ -1,14 +1,12 @@
 import { Points } from "@/components/hacker-news/points";
-import { Search } from "@/components/hacker-news/search";
-import { getItem, search } from "@/lib/api";
+import { getItem, search, NumericFilter } from "@/lib/api";
 import { formatDistance } from "date-fns";
 import Link from "next/link";
-import { Suspense } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 import { z } from "zod";
 
 const searchParamsSchema = z.object({
   query: z.string().optional(),
+  time: z.enum(["today", "week", "month", "year", "all"]).optional(),
 });
 
 export default async function Home({
@@ -16,25 +14,21 @@ export default async function Home({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const { query } = searchParamsSchema.parse(searchParams);
+  const { query, time } = searchParamsSchema.parse(searchParams);
 
   const posts = await search({
     query: query,
     tags: ["story"],
+    numericFilters: createNumericFilter({ time }),
   });
 
   return (
     <main className="container max-w-5xl my-2 space-y-2">
-      <Search query={query ?? ""} />
-      <ErrorBoundary fallback={<div>Something went wrong</div>}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <ol className="space-y-2">
-            {posts.hits.map((hit) => (
-              <Item key={hit.objectID} id={hit.objectID} />
-            ))}
-          </ol>
-        </Suspense>
-      </ErrorBoundary>
+      <ol className="space-y-2">
+        {posts.hits.map((hit) => (
+          <Item key={hit.objectID} id={hit.objectID} />
+        ))}
+      </ol>
     </main>
   );
 }
@@ -48,9 +42,9 @@ async function Item({ id }: { id: string }) {
   });
 
   return (
-    <Link
+    <a
       className="flex border rounded-lg p-4 space-x-4 hover:bg-accent"
-      href={`/posts/${id}`}
+      href={item.url}
     >
       <Points id={item.id} />
       <div>
@@ -63,10 +57,32 @@ async function Item({ id }: { id: string }) {
           )}
         </h2>
         <p className="text-muted-foreground text-sm">
-          by <span>{item.by}</span> - <span>{item.descendants}</span> comments -{" "}
-          <span>{time}</span>
+          by {item.by} - {item.descendants} comments - {time}
         </p>
       </div>
-    </Link>
+    </a>
   );
 }
+
+const createNumericFilter = ({
+  time,
+}: z.infer<typeof searchParamsSchema>): NumericFilter => {
+  switch (time) {
+    case "all": {
+      return ["created_at_i", ">", 0];
+    }
+    case "year": {
+      return ["created_at_i", ">", Date.now() / 1000 - 365 * 24 * 60 * 60];
+    }
+    case "month": {
+      return ["created_at_i", ">", Date.now() / 1000 - 30 * 24 * 60 * 60];
+    }
+    case "week": {
+      return ["created_at_i", ">", Date.now() / 1000 - 7 * 24 * 60 * 60];
+    }
+    case "today":
+    default: {
+      return ["created_at_i", ">", Date.now() / 1000 - 24 * 60 * 60];
+    }
+  }
+};

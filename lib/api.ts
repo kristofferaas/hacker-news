@@ -60,7 +60,7 @@ type SearchTag =
 
 type NumericCondition = "<" | "<=" | "=" | ">" | ">=";
 type NumericField = "created_at_i" | "points" | "num_comments";
-type NumericFilter = [NumericField, NumericCondition, number];
+export type NumericFilter = [NumericField, NumericCondition, number];
 
 type SearchQueryParams = {
   // full-text query

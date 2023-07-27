@@ -1,6 +1,8 @@
-import "./globals.css";
+import { AppNav } from "@/components/hacker-news/app-nav";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import "./globals.css";
+import { AppFooter } from "@/components/hacker-news/app-footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,11 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav className="flex fixed w-screen h-16 items-center justify-center bg-orange-500 text-black z-50">
-          <h1 className="text-2xl font-bold">Hacker News</h1>
-        </nav>
-        <div className="h-16" />
+        <AppNav />
         {children}
+        <AppFooter />
       </body>
     </html>
   );
