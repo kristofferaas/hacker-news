@@ -6,6 +6,8 @@ import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 
+export const runtime = "edge";
+
 const searchParamsSchema = z.object({
   query: z.string().optional(),
   time: z.enum(["today", "week", "month", "year", "all"]).optional(),
@@ -68,7 +70,7 @@ const Pagination = ({
             key={p}
             size="icon"
             className="flex-shrink-0"
-            variant={p === page ? "default" : "outline"}
+            variant={p === page ? "secondary" : "ghost"}
             asChild
           >
             <Link

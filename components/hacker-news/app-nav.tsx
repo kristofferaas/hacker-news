@@ -11,7 +11,14 @@ import {
 } from "../ui/select";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ClockIcon } from "lucide-react";
+import { ClockIcon, SearchIcon } from "lucide-react";
+import { useTransition } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export const AppNav = () => {
   const searchParams = useSearchParams();
@@ -44,24 +51,36 @@ const Search = ({ query, time }: SearchProps) => {
       <Input placeholder="Search" name="query" defaultValue={query || ""} />
       {/* for "did not match" warning see https://github.com/vercel/next.js/issues/53110 */}
       <TimeFilter time={time || "today"} />
-      <Button type="submit">Search</Button>
+      <Button variant="secondary" type="submit" className="hidden sm:flex">
+        Search
+      </Button>
+      <Button
+        variant="secondary"
+        type="submit"
+        size="icon"
+        className="shrink-0 show sm:hidden"
+      >
+        <SearchIcon className="w-4 h-4" />
+      </Button>
     </form>
   );
 };
 
 const TimeFilter = ({ time }: { time: string }) => {
   return (
-    <Select name="time" defaultValue={time}>
-      <SelectTrigger className="w-[180px] hidden sm:flex">
-        <SelectValue placeholder="Time" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="today">Today</SelectItem>
-        <SelectItem value="week">Week</SelectItem>
-        <SelectItem value="month">Month</SelectItem>
-        <SelectItem value="year">Year</SelectItem>
-        <SelectItem value="all">All time</SelectItem>
-      </SelectContent>
-    </Select>
+    <>
+      <Select name="time" defaultValue={time}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Time" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="today">Today</SelectItem>
+          <SelectItem value="week">Week</SelectItem>
+          <SelectItem value="month">Month</SelectItem>
+          <SelectItem value="year">Year</SelectItem>
+          <SelectItem value="all">All time</SelectItem>
+        </SelectContent>
+      </Select>
+    </>
   );
 };

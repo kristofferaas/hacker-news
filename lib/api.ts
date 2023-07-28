@@ -35,18 +35,6 @@ export const getItem = async (id: number | string) => {
   return itemSchema.parse(data);
 };
 
-const storySchema = z.object({
-  by: z.string(),
-  descendants: z.number(),
-  id: z.number(),
-  kids: z.array(z.number()),
-  score: z.number(),
-  time: z.number(),
-  title: z.string(),
-  type: z.literal("story"),
-  url: z.string().url(),
-});
-
 type SearchTag =
   | "story"
   | "comment"
@@ -95,7 +83,9 @@ const searchQueryParamsToString = (params: SearchQueryParams) => {
 
 export const search = async (params: SearchQueryParams) => {
   const query = searchQueryParamsToString(params);
-  const posts = await fetch(`${SEARCH_API_URL}/search?${query}`);
+  const posts = await fetch(`${SEARCH_API_URL}/search?${query}`, {
+    cache: "no-cache",
+  });
   const data = await posts.json();
   return searchResultSchema.parse(data);
 };
@@ -110,7 +100,7 @@ export const searchByDate = async (params: SearchQueryParams) => {
 const hitsSchema = z.object({
   created_at: z.string(),
   title: z.string(),
-  url: z.string().url().nullable(),
+  url: z.string().nullable(),
   author: z.string(),
   points: z.number(),
   story_text: z.string().nullable(),
@@ -131,11 +121,13 @@ const hitsSchema = z.object({
       fullyHighlighted: z.boolean().optional(),
       matchedWords: z.array(z.string()),
     }),
-    url: z.object({
-      value: z.string(),
-      matchLevel: z.enum(["none", "partial", "full"]),
-      matchedWords: z.array(z.string()),
-    }).optional(),
+    url: z
+      .object({
+        value: z.string(),
+        matchLevel: z.enum(["none", "partial", "full"]),
+        matchedWords: z.array(z.string()),
+      })
+      .optional(),
     author: z.object({
       value: z.string(),
       matchLevel: z.enum(["none", "partial", "full"]),
