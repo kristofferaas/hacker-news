@@ -1,5 +1,4 @@
 import { getItem } from "@/lib/api";
-import { cn } from "@/lib/utils";
 import { ArrowBigUpIcon } from "lucide-react";
 
 export type PointsProps = {

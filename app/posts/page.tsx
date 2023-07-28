@@ -1,10 +1,8 @@
-import { Points } from "@/components/hacker-news/points";
+import { Item } from "@/components/hacker-news/item";
 import { Button } from "@/components/ui/button";
-import { getItem, search, NumericFilter } from "@/lib/api";
+import { NumericFilter, search } from "@/lib/api";
 import { qs } from "@/lib/utils";
-import { Arrow } from "@radix-ui/react-select";
-import { formatDistance } from "date-fns";
-import { ArrowLeft, ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 
@@ -27,50 +25,19 @@ export default async function Home(props: { searchParams: unknown }) {
   });
 
   return (
-    <main className="container max-w-5xl my-2 space-y-2">
+    <main className="container max-w-5xl">
       {query && (
-        <span className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground my-2">
           {nbHits} results for &quot;{query}&quot;
-        </span>
+        </p>
       )}
-      <ol className="space-y-2">
+      <ol className="space-y-2 mt-2">
         {hits.map((hit) => (
           <Item key={hit.objectID} id={hit.objectID} />
         ))}
       </ol>
       <Pagination page={page} pageCount={nbPages} searchParams={searchParams} />
     </main>
-  );
-}
-
-async function Item({ id }: { id: string }) {
-  const item = await getItem(id);
-
-  const url = item.url ? new URL(item.url) : null;
-  const time = formatDistance(new Date(item.time * 1000), new Date(), {
-    addSuffix: true,
-  });
-
-  return (
-    <a
-      className="flex border rounded-lg p-4 space-x-4 hover:bg-accent"
-      href={item.url}
-    >
-      <Points id={item.id} />
-      <div>
-        <h2 className="font-bold">
-          {item.title}{" "}
-          {url && (
-            <span className="font-normal text-muted-foreground text-sm">
-              ({url.hostname})
-            </span>
-          )}
-        </h2>
-        <p className="text-muted-foreground text-sm">
-          by {item.by} - {item.descendants} comments - {time}
-        </p>
-      </div>
-    </a>
   );
 }
 
@@ -90,12 +57,12 @@ const Pagination = ({
 
   return (
     <div className="flex">
-      <Button className="shrink-0" variant="outline" size="icon" asChild>
+      <Button className="shrink-0 my-2" variant="outline" size="icon" asChild>
         <Link href={`/posts?${qs({ ...searchParams, page: prevPage })}`}>
           <ArrowLeftIcon className="w-4 h-4" />
         </Link>
       </Button>
-      <div className="flex flex-grow space-x-2 px-2 overflow-auto">
+      <div className="flex flex-grow space-x-2 p-2 overflow-auto">
         {pages.map((p) => (
           <Button
             key={p}
@@ -113,7 +80,7 @@ const Pagination = ({
           </Button>
         ))}
       </div>
-      <Button className="shrink-0" variant="outline" size="icon" asChild>
+      <Button className="shrink-0 my-2" variant="outline" size="icon" asChild>
         <Link href={`/posts?${qs({ ...searchParams, page: nextPage })}`}>
           <ArrowRightIcon className="w-4 h-4" />
         </Link>

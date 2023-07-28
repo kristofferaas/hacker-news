@@ -2,8 +2,8 @@ import { ThemeSelect } from "../ui/theme";
 
 export const AppFooter = () => {
   return (
-    <div className="border-t flex flex-col">
-      <div className="container max-w-5xl flex justify-between py-4">
+    <div className="border-t flex flex-col mt-8">
+      <div className="container max-w-5xl py-8 space-y-8 flex flex-col md:flex-row md:space-y-0 md:justify-between">
         <HackerNewsColumn />
         <OrganizationColumn />
         <AppearanceColumn />
