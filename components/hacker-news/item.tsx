@@ -1,6 +1,7 @@
 import { Points } from "@/components/hacker-news/points";
 import { getItem } from "@/lib/api";
 import { formatDistance } from "date-fns";
+import { Skeleton } from "../ui/skeleton";
 
 export async function Item({ id }: { id: string }) {
   const item = await getItem(id);
@@ -30,5 +31,17 @@ export async function Item({ id }: { id: string }) {
         </p>
       </div>
     </a>
+  );
+}
+
+export function ItemSkeleton() {
+  return (
+    <div className="flex border rounded-lg px-4 h-20 overflow-hidden">
+      <Skeleton className="flex-shrink-0 h-8 w-8 rounded-lg mr-4 my-auto" />
+      <div className="flex flex-col space-y-2 my-auto">
+        <Skeleton className="flex h-4 w-[520px] rounded-lg" />
+        <Skeleton className="flex h-4 w-80 rounded-lg" />
+      </div>
+    </div>
   );
 }

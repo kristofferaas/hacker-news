@@ -27,16 +27,14 @@ export const AppNav = () => {
   const time = searchParams.get("time");
 
   return (
-    <>
-      <nav className="fixed w-screen h-14 py-2 bg-background border-b">
-        <div className="container max-w-5xl flex flex-grow items-center">
-          <Button className="mr-2 text-lg shrink-0" size="icon" asChild>
-            <Link href="/">Y</Link>
-          </Button>
-          <Search query={query} time={time} />
-        </div>
-      </nav>
-    </>
+    <nav className="fixed w-screen h-14 py-2 bg-background border-b z-50">
+      <div className="container max-w-5xl flex flex-grow items-center">
+        <Button className="mr-2 text-lg shrink-0" size="icon" asChild>
+          <Link href="/">Y</Link>
+        </Button>
+        <Search query={query} time={time} />
+      </div>
+    </nav>
   );
 };
 
