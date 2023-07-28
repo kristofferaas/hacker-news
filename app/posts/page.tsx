@@ -1,6 +1,9 @@
 import { Points } from "@/components/hacker-news/points";
+import { Button } from "@/components/ui/button";
 import { getItem, search, NumericFilter } from "@/lib/api";
+import { Arrow } from "@radix-ui/react-select";
 import { formatDistance } from "date-fns";
+import { ArrowLeft, ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { z } from "zod";
 
@@ -29,6 +32,7 @@ export default async function Home({
           <Item key={hit.objectID} id={hit.objectID} />
         ))}
       </ol>
+      <Pagination />
     </main>
   );
 }
@@ -63,6 +67,23 @@ async function Item({ id }: { id: string }) {
     </a>
   );
 }
+
+const Pagination = () => {
+  return (
+    <div className="flex space-x-2">
+      <Button variant="outline" size="icon" asChild>
+        <Link href="/posts?page=2">
+          <ArrowLeftIcon className="w-4 h-4" />
+        </Link>
+      </Button>
+      <Button variant="outline" size="icon" asChild>
+        <Link href="/posts?page=2">
+          <ArrowRightIcon className="w-4 h-4" />
+        </Link>
+      </Button>
+    </div>
+  );
+};
 
 const createNumericFilter = ({
   time,

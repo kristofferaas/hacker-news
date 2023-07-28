@@ -20,10 +20,10 @@ export const AppNav = () => {
 
   return (
     <>
-      <nav className="fixed w-screen h-12 pt-2 bg-white">
+      <nav className="fixed w-screen h-14 py-2 bg-background border-b">
         <div className="container max-w-5xl flex flex-grow items-center">
           <Button
-            className="mr-2 bg-orange-500 text-lg hover:bg-orange-600 shrink-0"
+            className="mr-2 text-white bg-orange-500 text-lg hover:bg-orange-600 shrink-0"
             size="icon"
             asChild
           >
@@ -32,7 +32,6 @@ export const AppNav = () => {
           <Search query={query} time={time} />
         </div>
       </nav>
-      <div className="h-12" />
     </>
   );
 };
