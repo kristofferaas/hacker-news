@@ -161,14 +161,14 @@ const searchResultSchema = z.object({
       .object({
         query: z.number().optional(),
         scanning: z.number().optional(),
-        total: z.number(),
+        total: z.number().optional(),
       })
       .optional(),
     request: z.object({
-      roundTrip: z.number(),
-    }),
-    total: z.number(),
-  }),
+      roundTrip: z.number().optional(),
+    }).optional(),
+    total: z.number().optional(),
+  }).optional(),
   serverTimeMS: z.number(),
 });
 
